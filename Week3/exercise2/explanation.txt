@@ -1,0 +1,5 @@
+The `docker stop` command will attempt to gracefully shutdown the processes inside the container and the container itself. The container will still exist and can be seen using the `docker ps -a` command.
+The `docker kill` command will immediately shutdowns the processes inside the container and the container itself. Like `docker stop`, the container will continue existing and can be viewed by executing the `docker ps -a` command.
+In both cases, the container can be restarted using the command `docker start`.
+The `docker rm` command will completely erase a container. The container will not appear after runnng the `docker ps -a` command and cannot be restarted using `docker start`. If the image was not deleted, a new container can be created using  `docker run`. Any change done on a container between `docker run` and `docker rm` is lost.
+Execting `docker rm` on a running container will fail. One can run `docker rm -f` to force the container to be deleted despite being active but it is generally a poor practice.
