@@ -1,0 +1,96 @@
+\documentclass[]{beamer}
+
+\usepackage{beamerthemesplit} 
+\usetheme{progressbar}
+
+\title{Classifying spam messages in Pyspark}
+\author{Blaise Frison}
+\institute{CEBD1261 Big Data Infrastructure}
+\date{November 28\textsuperscript{th}, 2020}
+\graphicspath{ {./images/} }
+\beamertemplatenavigationsymbolsempty
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Introduction}
+
+  \begin{itemize}
+  \item The purpose of this demontration is to train a Random Forest Classifier model in Apache Spark to recognize spam SMSs
+  \item The classifier is imported from the pyspark.ml library
+  \item Twilio is used to retrieve a history of text messages and test the model on real life data (spoiler alert, it doesn't perform particularly well)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Methodology}
+
+  \begin{itemize}
+  \item The training dataset is obtained from a csv file with 5571 messages, all identified as "ham" or "spam"
+  \item The csv file is obtained from a Twilio tutorial \url{https://www.twilio.com/blog/spam-deep-learning-detection-sms-keras-python-twilio}
+  \item The messages are tokenized into words and transformed in 8-dimensional vectors of floats using the Word2Vec function to provide the same number of features for all messages regardless of the number of words.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Word2Vec}
+
+  \begin{itemize}
+  \item The Word2Vec function transforms series of words into vectors of equal lengths
+  \item Words that share similar context have a short distance between their vectors
+  \item The result of that function is a 8 column matrix of floats that fit nicely in a Random Forest Classifer
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Random Forest}
+
+  \begin{itemize}
+  \item The Random Forest algorithm is based on the Decision Tree
+  \item The Decision Tree creates a flowchart that help you predict labels for all inputs
+  \item With Random Forest, several Decision Trees are fitted on the same dataset. The dataset is modified randomly for each tree to avoid repeating the exact same results. The final label is determined by a vote from all trees.
+  \item The random modifications can be done using bootstrapping, which duplicates some values and drops some others. Also, some columns are randomly dropped for each tree.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evaluation}
+
+  \begin{itemize}
+  \item The results are evaluated using the accuracy and the area under curve methods
+  \item The accuracy is fairly simple, it is the percentage of SMSs that are properly labelled
+  \item Accuracy can be misleading if only a tiny percentage of SMSs are spam. If 99 \% of messages are "ham" and 1 \% are "spam", a model that classifies everything as "ham" would have an accuracy of 99 \%! Yet, it would be a very bad model
+  \item The Area under the curve, under such circumstances, would get a score of 50 \% because it succeeds for all SMSs in one category and fails for all SMSs in the other category
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Results}
+
+  \begin{itemize}
+  \item We can see the accuracy is higher than the AUC score
+  \item From the confusion matrix, we see that even though the number of messages that are mislabelled is small relative to the total test dataset size, it is relatively large compared to the number of spam messages
+  \item This is reflected in the lower AUC score
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Demo}
+  \begin{center}
+  \Huge{Demo}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{center}
+    \Huge{Questions?}
+  \end{center}
+
+\end{frame}
+
+\end{document}
